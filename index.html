@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Booking Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .msg {
+            padding: 10px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ticket Booking Platform</h1>
+        
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="msg">{{ messages[0] }}</div>
+        {% endif %}
+        {% endwith %}
+        
+        <form action="/search" method="POST">
+            <label for="ticket_type">Search Available Tickets:</label>
+            <select name="ticket_type">
+                {% for ticket, count in tickets.items() %}
+                <option value="{{ ticket }}">{{ ticket }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        <form action="/book" method="POST">
+            <label for="ticket_type">Select Ticket Type:</label>
+            <select name="ticket_type">
+                {% for ticket, count in tickets.items() %}
+                <option value="{{ ticket }}">{{ ticket }} - {{ prices[ticket] }} rupees ({{ count }} available)</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn">Book Ticket</button>
+        </form>
+
+        <form action="/cancel" method="POST">
+            <label for="ticket_type">Cancel Ticket:</label>
+            <select name="ticket_type">
+                {% for ticket, count in tickets.items() %}
+                <option value="{{ ticket }}">{{ ticket }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn">Cancel Ticket</button>
+        </form>
+
+        <form action="/payment" method="POST">
+            <label for="ticket_type">Proceed to Payment:</label>
+            <select name="ticket_type">
+                {% for ticket in booked_tickets.keys() %}
+                <option value="{{ ticket }}">{{ ticket }} - {{ prices[ticket] }} rupees</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="payment_amount" placeholder="Enter payment amount" required>
+            <button type="submit" class="btn">Proceed to Payment</button>
+        </form>
+
+        <button class="btn" onclick="location.href='/'">Confirm/Submit</button>
+    </div>
+</body>
+</html>
